@@ -16,7 +16,8 @@ const BOOKS = {
   usd: "usd_mxn",
 };
 
-const MXN_PER_ORDER = "100";
+const MXN_TO_USD = "500";
+const MXN_TO_BTC = "100";
 
 // body has to be stringified
 const callRest = async (method, path, body = "") => {
@@ -44,10 +45,10 @@ const getBalances = async () => {
   return balances.filter(({ total }) => Number(total) > 0);
 };
 
-const placeOrder = async (book) => {
+const placeOrder = async (book, amount) => {
   const body = {
     book,
-    minor: MXN_PER_ORDER,
+    minor: amount,
     side: "buy",
     type: "market",
   };
@@ -66,7 +67,7 @@ const {
   success: usdSuccess,
   payload: { oid: usdOid = "" } = { oid: "" },
   error: usdError,
-} = await placeOrder(BOOKS.usd);
+} = await placeOrder(BOOKS.usd, MXN_TO_USD);
 
 if (usdSuccess) {
   console.log(`usd-oid: ${usdOid}`);
@@ -78,7 +79,7 @@ const {
   success: btcSuccess,
   payload: { oid: btcOid = "" } = { oid: "" },
   error: btcError,
-} = await placeOrder(BOOKS.btc);
+} = await placeOrder(BOOKS.btc, MXN_TO_BTC);
 
 if (btcSuccess) {
   console.log(`btc-oid: ${btcOid}`);
